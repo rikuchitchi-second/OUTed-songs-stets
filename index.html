@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>統計データチャート</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>統計データチャート</h1>
+        
+        <div class="search-form">
+            <label for="year">年:</label>
+            <select id="year">
+                <option value="2026">2026年</option>
+                <option value="2025">2025年</option>
+            </select>
+
+            <label for="month">月:</label>
+            <select id="month">
+                <option value="1">1月</option>
+                <option value="2">2月</option>
+                <option value="3">3月</option>
+                <option value="4">4月</option>
+                <option value="5" selected>5月</option>
+                <option value="6">6月</option>
+                <option value="7">7月</option>
+                <option value="8">8月</option>
+                <option value="9">9月</option>
+                <option value="10">10月</option>
+                <option value="11">11月</option>
+                <option value="12">12月</option>
+            </select>
+
+            <label for="week">週目:</label>
+            <select id="week">
+                <option value="1">第1週</option>
+                <option value="2">第2週</option>
+                <option value="3" selected>第3週</option>
+                <option value="4">第4週</option>
+                <option value="5">第5週</option>
+            </select>
+
+            <button id="search-btn">データを表示</button>
+        </div>
+
+        <div class="chart-container">
+            <h2 id="chart-title">ランキング</h2>
+            <table id="chart-table">
+                <thead>
+                    <tr>
+                        <th>順位</th>
+                        <th>名前 / チャンネル名</th>
+                        <th>再生回数 増加数</th>
+                    </tr>
+                </thead>
+                <tbody id="chart-body">
+                    </tbody>
+            </table>
+            <p id="no-data" class="hidden">該当する期間のデータがまだ登録されていません。</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
