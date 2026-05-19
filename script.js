@@ -1,34 +1,11 @@
-// 1. 統計データの定義 (年 -> 月 -> 週 -> データの配列)
-// 本来は外部のデータベースやJSONファイルから取得しますが、まずはこの中で管理・拡張可能です。
-const chartData = {
-    "2026": {
-        "5": {
-            "3": [
-                { name: "VTuberサンプルA", viewsGrowth: 250000 },
-                { name: "VTuberサンプルB", viewsGrowth: 480000 },
-                { name: "VTuberサンプルC", viewsGrowth: 120000 },
-                { name: "VTuberサンプルD", viewsGrowth: 85000 }
-            ],
-            "4": [
-                { name: "VTuberサンプルA", viewsGrowth: 190000 },
-                { name: "VTuberサンプルB", viewsGrowth: 310000 }
-            ]
-        }
-    },
-    "2025": {
-        "12": {
-            "1": [
-                { name: "VTuberサンプルC", viewsGrowth: 500000 }
-            ]
-        }
-    }
-};
+// 1. 【重要】ここにステップ2でコピーしたGoogleスプレッドシートのCSVのURLを貼り付けます
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/XXXXXX/pub?output=csv";
 
-// 2. ボタンのクリックイベントなどを登録
+// ボタンのクリックイベントを登録
 document.getElementById('search-btn').addEventListener('click', updateChart);
 
-// 3. チャートを更新するメインロジック
-function updateChart() {
+// チャートを更新するメインロジック（非同期処理 async を追加）
+async function updateChart() {
     // 画面の選択値を取得
     const year = document.getElementById('year').value;
     const month = document.getElementById('month').value;
@@ -44,50 +21,84 @@ function updateChart() {
     // 表示されている古いテーブルの中身をクリア
     tbody.innerHTML = '';
 
-    // 安全にデータを探索（データが存在しない場合のハンドリング）
-    const yearly = chartData[year];
-    const monthly = yearly ? yearly[month] : null;
-    const weeklyData = monthly ? monthly[week] : null;
+    try {
+        // ① インターネット経由でスプレッドシートのCSVデータを取得
+        const response = await fetch(CSV_URL);
+        if (!response.ok) throw new Error("データの取得に失敗しました");
+        const csvText = await response.text();
 
-    // データが存在しない場合
-    if (!weeklyData || weeklyData.length === 0) {
+        // ② CSVテキストを1行ずつに分解して、扱いやすいオブジェクトの配列に変換
+        const lines = csvText.split('\n');
+        const allData = [];
+
+        // 1行目はヘッダー（項目名）なので、2行目（インデックス1）から処理する
+        for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line) continue; // 空行はスキップ
+            
+            const columns = line.split(',');
+            // スプレッドシートの列の順番通りにデータを格納
+            allData.push({
+                year: columns[0].trim(),
+                month: columns[1].trim(),
+                week: columns[2].trim(),
+                name: columns[3].trim(),
+                viewsGrowth: parseInt(columns[4].trim(), 10) || 0
+            });
+        }
+
+        // ③ ユーザーが画面で選択した「年・月・週」に完全に一致するデータだけを抽出（フィルター）
+        const filteredData = allData.filter(item => 
+            item.year === year && 
+            item.month === month && 
+            item.week === week
+        );
+
+        // 該当データが存在しない場合
+        if (filteredData.length === 0) {
+            table.classList.add('hidden');
+            noDataText.classList.remove('hidden');
+            return;
+        }
+
+        // データが存在する場合の表示切り替え
+        table.classList.remove('hidden');
+        noDataText.classList.add('hidden');
+
+        // ④ 抽出されたデータを、再生回数（viewsGrowth）が大きい順にソート（並び替え）
+        const sortedData = filteredData.sort((a, b) => b.viewsGrowth - a.viewsGrowth);
+
+        // ⑤ ソートされたデータをHTMLテーブルに挿入
+        sortedData.forEach((item, index) => {
+            const row = document.createElement('tr');
+            
+            // 1列目: 順位
+            const rankCell = document.createElement('td');
+            rankCell.innerHTML = `<strong>${index + 1}位</strong>`;
+            row.appendChild(rankCell);
+
+            // 2列目: 名前
+            const nameCell = document.createElement('td');
+            nameCell.innerText = item.name;
+            row.appendChild(nameCell);
+
+            // 3列目: 増加数（カンマ区切り）
+            const growthCell = document.createElement('td');
+            growthCell.innerText = `+${item.viewsGrowth.toLocaleString()}`;
+            growthCell.style.color = '#e74c3c';
+            growthCell.style.fontWeight = 'bold';
+            row.appendChild(growthCell);
+
+            tbody.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error("エラーが発生しました:", error);
         table.classList.add('hidden');
+        noDataText.innerText = "データの読み込み中にエラーが発生しました。URLの設定等を確認してください。";
         noDataText.classList.remove('hidden');
-        return;
     }
-
-    // データが存在する場合の表示切り替え
-    table.classList.remove('hidden');
-    noDataText.classList.add('hidden');
-
-    // 【重要】再生回数の増加数（viewsGrowth）が大きい順にソート（並び替え）
-    const sortedData = [...weeklyData].sort((a, b) => b.viewsGrowth - a.viewsGrowth);
-
-    // ソートされたデータを一行ずつHTMLテーブルに組み立てて挿入
-    sortedData.forEach((item, index) => {
-        const row = document.createElement('tr');
-        
-        // 1列目: 順位 (配列のインデックスは0から始まるので +1 する)
-        const rankCell = document.createElement('td');
-        rankCell.innerHTML = `<strong>${index + 1}位</strong>`;
-        row.appendChild(rankCell);
-
-        // 2列目: 名前
-        const nameCell = document.createElement('td');
-        nameCell.innerText = item.name;
-        row.appendChild(nameCell);
-
-        // 3列目: 増加数（3桁ずつのカンマ区切りに整形 `toLocaleString()`）
-        const growthCell = document.createElement('td');
-        growthCell.innerText = `+${item.viewsGrowth.toLocaleString()}`;
-        growthCell.style.color = '#e74c3c'; // 数字を強調する赤系
-        growthCell.style.fontWeight = 'bold';
-        row.appendChild(growthCell);
-
-        // テーブルの本体（tbody）に追加
-        tbody.appendChild(row);
-    });
 }
 
-// 4. ページを開いた瞬間に、初期状態で選択されている期間のデータを一度表示する
+// ページを開いた瞬間に一度実行する
 window.onload = updateChart;
