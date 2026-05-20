@@ -139,14 +139,15 @@ function parseUntrackedRow(r) {
 
 function parseRequestRow(r) {
   return {
-    year: String(r['year']??r['年']??'').trim(),
-    month:String(r['month']??r['月']??'').trim(),
-    week: String(r['week']??r['週']??'').trim(),
-    title:    (r['title']    ??r['曲名']??'').trim(),
-    artist:   (r['artist']   ??r['アーティスト']??'').trim(),
-    videoId:  (r['videoid']  ??r['動画id']??'').trim(),
-    requester:(r['requester']??r['依頼者']??'').trim(),
-    note:     (r['note']     ??r['備考']??'').trim(),
+    year: String(r["year"]??r["年"]??"").trim(),
+    month:String(r["month"]??r["月"]??"").trim(),
+    week: String(r["week"]??r["週"]??"").trim(),
+    title:    (r["title"]    ??r["曲名"]       ??"").trim(),
+    artist:   (r["artist"]   ??r["アーティスト"]??"").trim(),
+    videoId:  (r["videoid"]  ??r["動画id"]      ??"").trim(),
+    views:    Number((r["views"]        ??r["累計再生数"]??"0").replace(/,/g,"")),
+    viewsIncrease: Number((r["viewsincrease"]??r["週間増加数"]??"0").replace(/,/g,"")),
+    note:     (r["note"]     ??r["備考"]         ??"").trim(),
   };
 }
 
@@ -444,16 +445,19 @@ function buildUntrackedHTML(e, i) {
 }
 
 function buildRequestHTML(e, i) {
-  const yt=e.videoId?`https://www.youtube.com/watch?v=${e.videoId}`:'#';
+  const yt=e.videoId?`https://www.youtube.com/watch?v=${e.videoId}`:"#";
   return `
   <a class="ranking-item ranking-item--request" href="${yt}" target="_blank" rel="noopener noreferrer"
      style="animation-delay:${i*0.03}s">
     <div class="rank-block"><span class="request-icon">✉</span></div>
     <div class="song-info">
       <span class="song-title">${esc(e.title)}</span>
-      <span class="song-artist">${esc(e.artist)}${e.requester?`　<em class="requester">依頼: ${esc(e.requester)}</em>`:''}</span>
+      <span class="song-artist">${esc(e.artist)}</span>
     </div>
-    <div class="views-block">${e.note?`<span class="item-note">${esc(e.note)}</span>`:''}</div>
+    <div class="views-block">
+      <span class="views-total${State.showTotalViews?" visible":""}">${e.views?fv(e.views):"—"}</span>
+      <span class="views-increase">${e.viewsIncrease?"+"+fv(e.viewsIncrease):"—"}</span>
+    </div>
   </a>`;
 }
 
