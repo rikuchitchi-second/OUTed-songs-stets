@@ -1,37 +1,64 @@
-<div class="chart-container">
-            <h2 id="chart-title">ランキング</h2>
-            <table id="chart-table">
-                <thead>
-                    <tr>
-                        <th>順位</th>
-                        <th>名前 / チャンネル名</th>
-                        <th>再生回数 増加数</th>
-                    </tr>
-                </thead>
-                <tbody id="chart-body">
-                    </tbody>
-            </table>
-            <p id="no-data" class="hidden">該当する期間のデータがまだ登録されていません。</p>
-        </div>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ボカロ週間ランキング</title>
+  <meta name="description" content="ボカロ曲の週間再生数ランキング。年・月・週で絞り込み、順位推移チャートも表示。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="wrapper">
 
-        <--- ここから新しく追加 --->
-        <div class="request-container" style="margin-top: 50px;">
-            <h2>特別依頼枠</h2>
-            <table id="request-table">
-                <thead>
-                    <tr>
-                        <th>名前 / チャンネル名</th>
-                        <th>掲載内容・備考</th>
-                    </tr>
-                </thead>
-                <tbody id="request-body">
-                    </tbody>
-            </table>
-        </div>
-        <--- ここまで新しく追加 --->
-
+  <header>
+    <div class="site-title">
+      <h1>ボカロ週間ランキング</h1>
+      <p>Vocaloid Weekly Chart</p>
     </div>
+  </header>
 
-    <script src="script.js"></script>
+  <div class="controls" role="group" aria-label="期間選択">
+    <button id="btn-prev" class="btn-nav" aria-label="前の週">◀ 前週</button>
+    <div class="control-group">
+      <label for="sel-year">年</label>
+      <select id="sel-year"></select>
+    </div>
+    <div class="control-group">
+      <label for="sel-month">月</label>
+      <select id="sel-month"></select>
+    </div>
+    <div class="control-group">
+      <label for="sel-week">週</label>
+      <select id="sel-week"></select>
+    </div>
+    <button id="btn-next" class="btn-nav" aria-label="次の週">次週 ▶</button>
+    <div class="controls-right">
+      <button id="btn-toggle-views" class="btn-toggle">総再生数</button>
+      <button id="btn-toggle-chart" class="btn-toggle">📈 チャート</button>
+    </div>
+  </div>
+
+  <p class="period-label" id="period-label">読み込み中...</p>
+
+  <div id="chart-wrap" style="display:none;">
+    <div class="chart-header">
+      <span class="chart-title">順位推移チャート</span>
+      <span class="chart-hint">チャート表示中に曲をクリック → その曲を拡大表示</span>
+    </div>
+    <canvas id="rank-chart"></canvas>
+    <div id="chart-legend" class="chart-legend"></div>
+  </div>
+
+  <main id="ranking-list" aria-label="ランキング一覧" aria-live="polite"></main>
+
+  <footer>
+    <p>データは Google スプレッドシートで管理。順位・前週比・初登場判定は自動計算。</p>
+  </footer>
+
+</div>
+<script src="js/app.js"></script>
 </body>
 </html>
