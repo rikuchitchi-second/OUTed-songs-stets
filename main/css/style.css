@@ -28,7 +28,6 @@
   --down:   #e87e7e;
   --new:    #e87eb8;
 
-  /* セクションカラー */
   --sec-untracked: rgba(108,85,180,0.22);
   --sec-million:   rgba(245,200,66,0.15);
   --sec-half:      rgba(157,126,232,0.15);
@@ -132,7 +131,6 @@ header{padding:2.5rem 0 2rem;border-bottom:1px solid var(--border);margin-bottom
 }
 .ranking-item:hover{background:var(--bg-card-hover);border-color:var(--border-hover);transform:translateX(3px)}
 
-/* セクション別ボーダーアクセント */
 .section-untracked + .ranking-item,
 .section-untracked ~ .ranking-item--untracked{border-left:2px solid var(--border-untracked)}
 .section-million + .ranking-item,
@@ -141,7 +139,6 @@ header{padding:2.5rem 0 2rem;border-bottom:1px solid var(--border);margin-bottom
 .section-third ~ .ranking-item:not([class*='--']){border-left:2px solid var(--border-third)}
 .section-requests ~ .ranking-item--request{border-left:2px solid var(--border-requests)}
 
-/* ランク番号 */
 .rank-block{display:flex;flex-direction:column;align-items:center;gap:0.18rem;min-width:2.5rem}
 .rank-num{font-family:var(--font-num);font-size:1.35rem;font-weight:700;line-height:1}
 .rank-num.rank-1{color:var(--rank-1)}
@@ -156,13 +153,11 @@ header{padding:2.5rem 0 2rem;border-bottom:1px solid var(--border);margin-bottom
 .rank-change.same{color:var(--text-muted)}
 .rank-change.new {color:var(--new);font-weight:700;letter-spacing:0.04em}
 
-/* 曲情報 */
 .song-info{display:flex;flex-direction:column;gap:0.18rem;min-width:0}
 .song-title{font-size:0.93rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-primary)}
 .song-artist{font-size:0.76rem;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .requester{font-style:normal;color:var(--accent-pink);font-size:0.72rem}
 
-/* 再生数 */
 .views-block{text-align:right;display:flex;flex-direction:column;gap:0.18rem;flex-shrink:0}
 .views-total{font-family:var(--font-num);font-size:0.82rem;color:var(--text-muted);display:none}
 .views-total.visible{display:block}
@@ -198,61 +193,16 @@ footer a{color:var(--accent-purple);text-decoration:none}
 }
 
 /* ===== CHART ===== */
-#chart-wrap {
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 1.25rem 1.5rem 1rem;
-  margin-bottom: 1.5rem;
-  animation: fadeUp 0.3s ease both;
+#chart-wrap{
+  background:var(--bg-surface);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:1.25rem 1.5rem 1rem;
+  margin-bottom:1.5rem;animation:fadeUp 0.3s ease both;
 }
-.chart-header {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-  flex-wrap: wrap;
-}
-.chart-title {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--accent-purple);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-.chart-hint {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-}
-#rank-chart {
-  width: 100%;
-  height: 260px;
-  display: block;
-}
-.chart-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  margin-top: 0.75rem;
-}
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.72rem;
-  color: var(--text-secondary);
-}
-.legend-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--c, #9d7ee8);
-  flex-shrink: 0;
-}
-
-/* チャート表示中に選択されたアイテム */
-.ranking-item.chart-selected {
-  border-color: var(--accent-purple) !important;
-  background: rgba(157, 126, 232, 0.1) !important;
-  cursor: pointer;
-}
+.chart-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:0.75rem;flex-wrap:wrap}
+.chart-title{font-size:0.85rem;font-weight:700;color:var(--accent-purple);text-transform:uppercase;letter-spacing:0.08em}
+.chart-hint{font-size:0.72rem;color:var(--text-muted)}
+#rank-chart{width:100%;height:260px;display:block}
+.chart-legend{display:flex;flex-wrap:wrap;gap:0.5rem 1rem;margin-top:0.75rem}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text-secondary)}
+.legend-dot{width:8px;height:8px;border-radius:50%;background:var(--c,#9d7ee8);flex-shrink:0}
+.ranking-item.chart-selected{border-color:var(--accent-purple)!important;background:rgba(157,126,232,0.1)!important;cursor:pointer}
