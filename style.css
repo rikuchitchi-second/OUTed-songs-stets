@@ -1,103 +1,258 @@
-body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f4f7f6;
-    color: #333;
-    margin: 0;
-    padding: 20px;
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg-deep:       #0d0a1a;
+  --bg-surface:    #12102a;
+  --bg-card:       #1a1733;
+  --bg-card-hover: #201d3d;
+  --bg-input:      #16142e;
+
+  --accent-purple: #9d7ee8;
+  --accent-pink:   #e87eb8;
+  --accent-teal:   #4ecdc4;
+  --accent-gold:   #f5c842;
+  --accent-coral:  #ff7c5c;
+
+  --text-primary:  #f0ecff;
+  --text-secondary:#a89ec8;
+  --text-muted:    #6a6088;
+
+  --border:        rgba(157,126,232,0.18);
+  --border-hover:  rgba(157,126,232,0.4);
+
+  --rank-1: #f5c842;
+  --rank-2: #c0c0c0;
+  --rank-3: #cd7f32;
+  --up:     #4ecdc4;
+  --down:   #e87e7e;
+  --new:    #e87eb8;
+
+  /* セクションカラー */
+  --sec-untracked: rgba(108,85,180,0.22);
+  --sec-million:   rgba(245,200,66,0.15);
+  --sec-half:      rgba(157,126,232,0.15);
+  --sec-third:     rgba(78,205,196,0.13);
+  --sec-requests:  rgba(232,126,184,0.15);
+  --sec-rest:      rgba(255,255,255,0.04);
+
+  --border-untracked: rgba(108,85,180,0.6);
+  --border-million:   rgba(245,200,66,0.6);
+  --border-half:      rgba(157,126,232,0.6);
+  --border-third:     rgba(78,205,196,0.55);
+  --border-requests:  rgba(232,126,184,0.6);
+  --border-rest:      rgba(255,255,255,0.1);
+
+  --font-main:'Noto Sans JP','Helvetica Neue',sans-serif;
+  --font-num: 'JetBrains Mono','Courier New',monospace;
+  --r-sm:6px;--r-md:10px;--r-lg:16px;
 }
 
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+html{scroll-behavior:smooth}
+body{font-family:var(--font-main);background:var(--bg-deep);color:var(--text-primary);min-height:100vh;line-height:1.6}
+
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 10%,rgba(100,60,200,0.12) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%,rgba(232,126,184,0.07) 0%,transparent 60%);
 }
 
-h1 {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 20px;
+.wrapper{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 1.5rem}
+
+/* ===== HEADER ===== */
+header{padding:2.5rem 0 2rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.site-title h1{
+  font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;
+  background:linear-gradient(135deg,var(--accent-purple),var(--accent-pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.site-title p{font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-top:0.2rem}
+
+/* ===== CONTROLS ===== */
+.controls{
+  background:var(--bg-surface);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:1.25rem 1.5rem;margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;
+}
+.control-group{display:flex;align-items:center;gap:0.5rem}
+.control-group label{font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap}
+.control-group select{
+  background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:0.38rem 2rem 0.38rem 0.7rem;font-size:0.88rem;
+  font-family:var(--font-main);cursor:pointer;transition:border-color 0.2s;
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236a6088' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 0.6rem center;
+}
+.control-group select:focus{outline:none;border-color:var(--accent-purple)}
+.btn-nav{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-sm);
+  color:var(--text-secondary);padding:0.38rem 0.75rem;font-size:0.82rem;cursor:pointer;
+  transition:all 0.2s;white-space:nowrap;font-family:var(--font-main);
+}
+.btn-nav:hover:not(:disabled){border-color:var(--accent-purple);color:var(--accent-purple)}
+.btn-nav:disabled{opacity:0.3;cursor:not-allowed}
+.controls-right{margin-left:auto;display:flex;gap:0.6rem}
+.btn-toggle{
+  background:transparent;border:1px solid var(--border);border-radius:var(--r-sm);
+  color:var(--text-muted);padding:0.32rem 0.7rem;font-size:0.72rem;cursor:pointer;
+  transition:all 0.2s;text-transform:uppercase;letter-spacing:0.06em;font-family:var(--font-main);
+}
+.btn-toggle.active,.btn-toggle:hover{border-color:var(--accent-purple);color:var(--accent-purple);background:rgba(157,126,232,0.08)}
+
+.period-label{text-align:center;font-size:0.78rem;color:var(--text-muted);margin-bottom:1.25rem;letter-spacing:0.05em}
+
+/* ===== SECTION HEADER ===== */
+.section-header{
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0.6rem 1.1rem;border-radius:var(--r-md);
+  margin:1.5rem 0 0.5rem;border-left:3px solid;
+}
+.section-icon{font-size:0.8rem;letter-spacing:-0.05em;flex-shrink:0}
+.section-label{font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em}
+.section-sub{font-size:0.7rem;color:var(--text-muted);margin-left:0.3rem}
+
+.section-untracked{background:var(--sec-untracked);border-color:var(--border-untracked);color:#c0adff}
+.section-million  {background:var(--sec-million);  border-color:var(--border-million);  color:var(--accent-gold)}
+.section-half     {background:var(--sec-half);     border-color:var(--border-half);     color:var(--accent-purple)}
+.section-third    {background:var(--sec-third);    border-color:var(--border-third);    color:var(--accent-teal)}
+.section-requests {background:var(--sec-requests); border-color:var(--border-requests); color:var(--accent-pink)}
+.section-rest     {background:var(--sec-rest);     border-color:var(--border-rest);     color:var(--text-muted)}
+
+/* ===== RANKING ITEM ===== */
+#ranking-list{display:flex;flex-direction:column;gap:0.45rem}
+
+.ranking-item{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);
+  padding:0.8rem 1.2rem;display:grid;grid-template-columns:3rem 1fr auto;
+  align-items:center;gap:1rem;transition:all 0.18s;
+  text-decoration:none;color:inherit;cursor:pointer;
+  animation:fadeUp 0.28s ease both;
+}
+.ranking-item:hover{background:var(--bg-card-hover);border-color:var(--border-hover);transform:translateX(3px)}
+
+/* セクション別ボーダーアクセント */
+.section-untracked + .ranking-item,
+.section-untracked ~ .ranking-item--untracked{border-left:2px solid var(--border-untracked)}
+.section-million + .ranking-item,
+.section-million ~ .ranking-item:not([class*='--']){border-left:2px solid var(--border-million)}
+.section-half ~ .ranking-item:not([class*='--']){border-left:2px solid var(--border-half)}
+.section-third ~ .ranking-item:not([class*='--']){border-left:2px solid var(--border-third)}
+.section-requests ~ .ranking-item--request{border-left:2px solid var(--border-requests)}
+
+/* ランク番号 */
+.rank-block{display:flex;flex-direction:column;align-items:center;gap:0.18rem;min-width:2.5rem}
+.rank-num{font-family:var(--font-num);font-size:1.35rem;font-weight:700;line-height:1}
+.rank-num.rank-1{color:var(--rank-1)}
+.rank-num.rank-2{color:var(--rank-2)}
+.rank-num.rank-3{color:var(--rank-3)}
+.rank-num.rank-other{color:var(--text-muted);font-size:1.05rem}
+.untracked-icon,.request-icon{font-size:1.1rem;color:var(--text-muted)}
+
+.rank-change{font-size:0.63rem;font-family:var(--font-num);display:flex;align-items:center;gap:0.12rem;white-space:nowrap}
+.rank-change.up  {color:var(--up)}
+.rank-change.down{color:var(--down)}
+.rank-change.same{color:var(--text-muted)}
+.rank-change.new {color:var(--new);font-weight:700;letter-spacing:0.04em}
+
+/* 曲情報 */
+.song-info{display:flex;flex-direction:column;gap:0.18rem;min-width:0}
+.song-title{font-size:0.93rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-primary)}
+.song-artist{font-size:0.76rem;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.requester{font-style:normal;color:var(--accent-pink);font-size:0.72rem}
+
+/* 再生数 */
+.views-block{text-align:right;display:flex;flex-direction:column;gap:0.18rem;flex-shrink:0}
+.views-total{font-family:var(--font-num);font-size:0.82rem;color:var(--text-muted);display:none}
+.views-total.visible{display:block}
+.views-increase{font-family:var(--font-num);font-size:0.82rem;color:var(--up);font-weight:600}
+.item-note{font-size:0.75rem;color:var(--text-muted)}
+
+/* ===== STATES ===== */
+.state-msg{text-align:center;padding:4rem 2rem;color:var(--text-muted)}
+.state-msg h2{font-size:1.1rem;margin-bottom:0.5rem;color:var(--text-secondary)}
+.state-msg p{font-size:0.85rem;line-height:1.7;white-space:pre-line}
+
+/* ===== FOOTER ===== */
+footer{text-align:center;padding:3rem 0 2rem;font-size:0.75rem;color:var(--text-muted);border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent-purple);text-decoration:none}
+
+/* ===== LOADING ===== */
+.loading-shimmer{
+  background:linear-gradient(90deg,var(--bg-card) 25%,var(--bg-card-hover) 50%,var(--bg-card) 75%);
+  background-size:200% 100%;animation:shimmer 1.4s infinite;
+  border-radius:var(--r-md);height:62px;
+}
+@keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:600px){
+  .controls{gap:0.9rem;padding:1rem}
+  .controls-right{width:100%;justify-content:flex-end}
+  .ranking-item{grid-template-columns:2.4rem 1fr auto;padding:0.7rem 0.85rem;gap:0.65rem}
+  .song-title{font-size:0.83rem}
+  .rank-num{font-size:1.1rem}
+  .section-header{padding:0.5rem 0.9rem}
 }
 
-.search-form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 30px;
-    background: #ecf0f1;
-    padding: 15px;
-    border-radius: 6px;
-    flex-wrap: wrap;
+/* ===== CHART ===== */
+#chart-wrap {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.25rem 1.5rem 1rem;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.3s ease both;
+}
+.chart-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+.chart-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-purple);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.chart-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+#rank-chart {
+  width: 100%;
+  height: 260px;
+  display: block;
+}
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-top: 0.75rem;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c, #9d7ee8);
+  flex-shrink: 0;
 }
 
-label {
-    font-weight: bold;
-}
-
-select, button {
-    padding: 8px 12px;
-    font-size: 16px;
-    border: 1px solid #bdc3c7;
-    border-radius: 4px;
-    background-color: white;
-}
-
-button {
-    background-color: #3498db;
-    color: white;
-    cursor: pointer;
-    border: none;
-    font-weight: bold;
-    transition: background 0.2s;
-}
-
-button:hover {
-    background-color: #2980b9;
-}
-
-.chart-container {
-    margin-top: 20px;
-}
-
-h2 {
-    font-size: 20px;
-    color: #34495e;
-    border-left: 5px solid #3498db;
-    padding-left: 10px;
-    margin-bottom: 15px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-th {
-    background-color: #f8f9fa;
-    color: #2c3e50;
-}
-
-tr:hover {
-    background-color: #f1f2f6;
-}
-
-.hidden {
-    display: none;
-}
-
-#no-data {
-    text-align: center;
-    color: #e74c3c;
-    font-weight: bold;
-    margin-top: 20px;
+/* チャート表示中に選択されたアイテム */
+.ranking-item.chart-selected {
+  border-color: var(--accent-purple) !important;
+  background: rgba(157, 126, 232, 0.1) !important;
+  cursor: pointer;
 }
