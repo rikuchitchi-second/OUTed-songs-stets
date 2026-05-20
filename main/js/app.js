@@ -360,11 +360,11 @@ function render() {
     html += third.map(e => buildEntryHTML(e, idx++)).join('');
   }
   if (untracked.length) {
-    html += sectionHeader('untracked','未統計化曲','再生数の取得が困難な曲');
+    html += sectionHeader('untracked','未統計化曲','');
     html += untracked.map(e => buildUntrackedHTML(e, idx++)).join('');
   }
   if (requests.length) {
-    html += sectionHeader('requests','依頼枠','視聴者からのリクエスト');
+    html += sectionHeader('requests','依頼枠','');
     html += requests.map(e => buildRequestHTML(e, idx++)).join('');
   }
   if (rest.length) {
