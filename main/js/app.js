@@ -11,7 +11,9 @@
 // ===================================================
 // ★ 設定
 // ===================================================
-SHEET_URLS: {
+const CONFIG = {
+  SHEET_URLS: {
+    // ★ここだけ変更: スプレッドシートの「ウェブに公開」URLを貼り付ける
   ranking:   'https://docs.google.com/spreadsheets/d/10QnXpQZUR0so22mKDDvPokgoej1x74aUXlV58X_bwVE/export?format=csv&gid=0',
   untracked: 'https://docs.google.com/spreadsheets/d/10QnXpQZUR0so22mKDDvPokgoej1x74aUXlV58X_bwVE/export?format=csv&gid=4023481',
   requests:  'https://docs.google.com/spreadsheets/d/10QnXpQZUR0so22mKDDvPokgoej1x74aUXlV58X_bwVE/export?format=csv&gid=1957443852',
