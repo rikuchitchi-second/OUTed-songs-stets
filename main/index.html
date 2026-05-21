@@ -22,6 +22,7 @@
 
   <div class="controls" role="group" aria-label="期間選択">
     <button id="btn-prev" class="btn-nav" aria-label="前の週">◀ 前週</button>
+
     <div class="control-group">
       <label for="sel-year">年</label>
       <select id="sel-year"></select>
@@ -34,15 +35,19 @@
       <label for="sel-week">週</label>
       <select id="sel-week"></select>
     </div>
+
     <button id="btn-next" class="btn-nav" aria-label="次の週">次週 ▶</button>
+
     <div class="controls-right">
       <button id="btn-toggle-views" class="btn-toggle">総再生数</button>
+      <button id="btn-toggle-detail" class="btn-toggle">詳細回数</button>
       <button id="btn-toggle-chart" class="btn-toggle">📈 チャート</button>
     </div>
   </div>
 
   <p class="period-label" id="period-label">読み込み中...</p>
 
+  <!-- ★ 順位推移チャート -->
   <div id="chart-wrap" style="display:none;">
     <div class="chart-header">
       <span class="chart-title">順位推移チャート</span>
@@ -56,6 +61,7 @@
 
   <footer>
     <p>「君と僕もさ、また明日へ向かっていこう。」</p>
+    <p style="margin-top:0.5rem"><a href="https://github.com/" target="_blank" rel="noopener">GitHub Pages</a> でホスティング</p>
   </footer>
 
 </div>
