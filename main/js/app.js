@@ -13,10 +13,9 @@
 // ===================================================
 const CONFIG = {
   SHEET_URLS: {
-    // ★ここだけ変更: スプレッドシートの「ウェブに公開」URLを貼り付ける
-  ranking:   'https://docs.google.com/spreadsheets/d/10QnXpQZUR0so22mKDDvPokgoej1x74aUXlV58X_bwVE/export?format=csv&gid=0',
-  untracked: 'https://docs.google.com/spreadsheets/d/10QnXpQZUR0so22mKDDvPokgoej1x74aUXlV58X_bwVE/export?format=csv&gid=4023481',
-  requests:  'https://docs.google.com/spreadsheets/d/10QnXpQZUR0so22mKDDvPokgoej1x74aUXlV58X_bwVE/export?format=csv&gid=1957443852',
+    ranking:   'https://docs.google.com/spreadsheets/d/XXXXXXXX/export?format=csv&gid=0',
+    untracked: 'https://docs.google.com/spreadsheets/d/XXXXXXXX/export?format=csv&gid=1111111111',
+    requests:  'https://docs.google.com/spreadsheets/d/XXXXXXXX/export?format=csv&gid=2222222222',
   },
   THRESHOLDS: {
     MILLION: 1_000_000,
@@ -45,6 +44,7 @@ const State = {
   month: null,
   week:  null,
   showTotalViews: false,
+  showDetailViews: false,
   chartVisible: false,
   chartSongFilter: null,   // null = 上位N曲全体, string = 曲キー
 
@@ -284,6 +284,11 @@ function bindEvents() {
     document.getElementById('btn-toggle-views').classList.toggle('active', State.showTotalViews);
     document.querySelectorAll('.views-total').forEach(el => el.classList.toggle('visible', State.showTotalViews));
   });
+  document.getElementById('btn-toggle-detail').addEventListener('click', () => {
+    State.showDetailViews = !State.showDetailViews;
+    document.getElementById('btn-toggle-detail').classList.toggle('active', State.showDetailViews);
+    render();
+  });
   document.getElementById('btn-toggle-chart').addEventListener('click', () => {
     State.chartVisible = !State.chartVisible;
     State.chartSongFilter = null;
@@ -360,11 +365,11 @@ function render() {
     html += third.map(e => buildEntryHTML(e, idx++)).join('');
   }
   if (untracked.length) {
-    html += sectionHeader('untracked','未統計化曲','');
+    html += sectionHeader('untracked','未統計化曲','再生数の取得が困難な曲');
     html += untracked.map(e => buildUntrackedHTML(e, idx++)).join('');
   }
   if (requests.length) {
-    html += sectionHeader('requests','依頼枠','');
+    html += sectionHeader('requests','依頼枠','視聴者からのリクエスト');
     html += requests.map(e => buildRequestHTML(e, idx++)).join('');
   }
   if (rest.length) {
@@ -425,8 +430,8 @@ function buildEntryHTML(e, i) {
       <span class="song-artist">${esc(e.artist)}</span>
     </div>
     <div class="views-block">
-      <span class="views-total${State.showTotalViews?' visible':''}">${fv(e.views)}</span>
-      <span class="views-increase">+${fv(e.viewsIncrease)}</span>
+      <span class="views-total${State.showTotalViews?' visible':''}">${fvAuto(e.views)}</span>
+      <span class="views-increase">+${fvAuto(e.viewsIncrease)}</span>
     </div>
   </a>`;
 }
@@ -456,8 +461,8 @@ function buildRequestHTML(e, i) {
       <span class="song-artist">${esc(e.artist)}</span>
     </div>
     <div class="views-block">
-      <span class="views-total${State.showTotalViews?" visible":""}">${e.views?fv(e.views):"—"}</span>
-      <span class="views-increase">${e.viewsIncrease?"+"+fv(e.viewsIncrease):"—"}</span>
+      <span class="views-total${State.showTotalViews?" visible":""}">${e.views?fvAuto(e.views):"—"}</span>
+      <span class="views-increase">${e.viewsIncrease?"+"+fvAuto(e.viewsIncrease):"—"}</span>
     </div>
   </a>`;
 }
@@ -658,10 +663,25 @@ function showError(msg,detail='') {
 // ===================================================
 // ユーティリティ
 // ===================================================
+// 通常表示: 億・万単位（1億以上は「1億2345.7万」形式）
 function fv(n) {
-  n=Number(n);
-  if(n>=10000) return (n/10000).toFixed(1)+'万';
+  n = Number(n);
+  if (n >= 100_000_000) {
+    const okuInt = Math.floor(n / 100_000_000);          // 億の整数部
+    const man    = (n % 100_000_000) / 10_000;           // 残りを万単位に
+    const manStr = man >= 0.1 ? (man % 1 === 0 ? man.toFixed(0) : man.toFixed(1)) + '万' : '';
+    return okuInt + '億' + manStr;
+  }
+  if (n >= 10_000) return (n / 10_000).toFixed(1) + '万';
   return n.toLocaleString('ja-JP');
+}
+// 詳細表示: カンマ区切りの正確な値
+function fvDetail(n) {
+  return Number(n).toLocaleString('ja-JP');
+}
+// 状態に応じて切り替え
+function fvAuto(n) {
+  return State.showDetailViews ? fvDetail(n) : fv(n);
 }
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
