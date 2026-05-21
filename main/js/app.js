@@ -13,9 +13,9 @@
 // ===================================================
 const CONFIG = {
   SHEET_URLS: {
-    ranking:   'https://docs.google.com/spreadsheets/d/XXXXXXXX/export?format=csv&gid=0',
-    untracked: 'https://docs.google.com/spreadsheets/d/XXXXXXXX/export?format=csv&gid=1111111111',
-    requests:  'https://docs.google.com/spreadsheets/d/XXXXXXXX/export?format=csv&gid=2222222222',
+  ranking:   'https://docs.google.com/spreadsheets/d/10QnXpQZUR0so22mKDDvPokgoej1x74aUXlV58X_bwVE/export?format=csv&gid=0',
+  untracked: 'https://docs.google.com/spreadsheets/d/10QnXpQZUR0so22mKDDvPokgoej1x74aUXlV58X_bwVE/export?format=csv&gid=4023481',
+  requests:  'https://docs.google.com/spreadsheets/d/10QnXpQZUR0so22mKDDvPokgoej1x74aUXlV58X_bwVE/export?format=csv&gid=1957443852',
   },
   THRESHOLDS: {
     MILLION: 1_000_000,
